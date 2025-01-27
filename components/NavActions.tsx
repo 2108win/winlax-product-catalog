@@ -1,6 +1,6 @@
 "use client";
 import CartButton from "@/components/CartButton";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AuthAction from "./AuthAction";
 
 type NavActionsProps = {
   className?: string;
@@ -59,11 +60,9 @@ function NavActions({ className, links }: NavActionsProps) {
             </SheetDescription>
           </SheetHeader>
           <SheetContent className="flex flex-col gap-4">
-            <div className="flex flex-col-reverse gap-4">
+            <div className="flex flex-col gap-4">
+              <AuthAction className="w-fit text-lg" />
               <CartButton />
-              <Button variant="ghost" className="w-fit text-lg">
-                Login
-              </Button>
             </div>
             <NavigationList links={links} className="flex-col" />
           </SheetContent>
@@ -71,10 +70,7 @@ function NavActions({ className, links }: NavActionsProps) {
       </Sheet>
       <div className="hidden items-center gap-4 md:flex">
         <CartButton />
-
-        <Button variant="ghost" className="text-lg">
-          Login
-        </Button>
+        <AuthAction className="text-lg" />
       </div>
     </div>
   );

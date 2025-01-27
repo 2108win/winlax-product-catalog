@@ -10,8 +10,8 @@ export interface Product {
   item_name: string;
   item_description: string;
   item_price: number;
-  item_color: string;
-  item_size: string;
+  item_color: ItemMore[];
+  item_size: ItemMore[];
   item_brand: string;
   item_material: string;
   item_category: string;
@@ -49,4 +49,18 @@ export interface ImageProduct {
   image_width: number | null;
   image_height: number | null;
   uploaded_at: Date;
+}
+
+export interface User {
+  id: string;
+  fullName: string;
+  emailAddresses: string;
+  image: string;
+  phoneNumbers: string;
+  cart: Product[];
+}
+export interface ItemMore {
+  id: number;
+  value: string;
+  order?: number;
 }

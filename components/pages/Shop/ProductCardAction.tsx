@@ -1,15 +1,13 @@
 "use client";
+import AuthModal from "@/components/modal/auth-modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useCart from "@/hooks/useCart";
 import { Product } from "@/lib/interfaces";
+import { useSession } from "@clerk/nextjs";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-// import AuthModal from "@/components/modal/auth-modal";
-// import useSessionUser from "@/hooks/useSession";
-// import { useSession } from "@clerk/nextjs";
-// import { addToCart } from "@/utils/cart";
 
 type Props = {
   product: Product;
@@ -27,7 +25,7 @@ export const ProductCardAction = ({
   const [quantity, setQuantity] = useState(1);
   const router = useRouter();
   const cart = useCart();
-  //   const { isSignedIn, isLoaded } = useSession();
+  const { isSignedIn } = useSession();
 
   const onChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (Number(e.target.value) < 1) return;
@@ -91,32 +89,32 @@ export const ProductCardAction = ({
         </div>
       )}
       <div className="mt-4 flex flex-col gap-4 sm:flex-row">
-        {/* {isSignedIn ? ( */}
-        <Button onClick={onAddToCart} size={size} className="w-full">
-          Thêm vào giỏ hàng
-          <ShoppingCart className="ml-4" size={20} />
-        </Button>
-        {/* ) : (
+        {isSignedIn ? (
+          <Button onClick={onAddToCart} size={size} className="w-full">
+            Add to cart
+            <ShoppingCart className="ml-4" size={20} />
+          </Button>
+        ) : (
           <AuthModal
             trigger={
               <Button size={size} className="w-full">
-                Thêm vào giỏ hàng
+                Add to cart
                 <ShoppingCart className="ml-4" size={20} />
               </Button>
             }
           />
-        )} */}
+        )}
 
-        {/* {isSignedIn ? ( */}
-        <Button
-          onClick={handleBuyNow}
-          className="w-full bg-[linear-gradient(290deg,#e5e5e5,25%,#3d444e,55%,#e5e5e5)] bg-[length:200%_100%] transition-all hover:bg-[length:100%_150%] dark:bg-[linear-gradient(110deg,#000000,25%,#3d444e,55%,#000000)]"
-          size={size}
-          variant={"outline"}
-        >
-          Mua ngay
-        </Button>
-        {/* ) : (
+        {isSignedIn ? (
+          <Button
+            onClick={handleBuyNow}
+            className="w-full bg-[linear-gradient(290deg,#e5e5e5,25%,#3d444e,55%,#e5e5e5)] bg-[length:200%_100%] transition-all hover:bg-[length:100%_150%] dark:bg-[linear-gradient(110deg,#000000,25%,#3d444e,55%,#000000)]"
+            size={size}
+            variant={"outline"}
+          >
+            Mua ngay
+          </Button>
+        ) : (
           <AuthModal
             trigger={
               <Button
@@ -128,7 +126,7 @@ export const ProductCardAction = ({
               </Button>
             }
           />
-        )} */}
+        )}
       </div>
     </div>
   );

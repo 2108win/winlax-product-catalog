@@ -1,4 +1,5 @@
 "use client";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ImageProduct, Product } from "@/lib/interfaces";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -14,16 +15,21 @@ function ProductImage({ product, className }: Props) {
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       <div className="flex h-[300px] md:h-[450px]">
-        <Image
-          src={product.item_images[currentImage].url}
-          alt={product.item_name + " - " + currentImage}
-          width={1000}
-          height={1000}
-          className="m-auto aspect-auto h-auto max-h-full w-auto rounded-lg border object-contain object-center shadow-lg transition-all duration-300"
-        />
+        {product ? (
+          <Image
+            src={product.item_images[currentImage].url}
+            alt={product.item_name + " - " + currentImage}
+            width={1000}
+            height={1000}
+            priority
+            className="m-auto aspect-auto h-auto max-h-full w-auto rounded-lg border object-contain object-center shadow-lg transition-all duration-300"
+          />
+        ) : (
+          <Skeleton className="aspect-square w-full" />
+        )}
       </div>
       <div className="flex w-full flex-nowrap items-center gap-4 overflow-x-auto py-4">
-        {product.item_images.map((image: ImageProduct, index: number) => (
+        {product?.item_images.map((image: ImageProduct, index: number) => (
           <Image
             key={index}
             src={image.url}

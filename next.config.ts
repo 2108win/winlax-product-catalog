@@ -7,8 +7,6 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname:
           "baserow-backend-production20240528124524339000000001.s3.amazonaws.com",
-        port: "",
-        pathname: "/user_files/**",
       },
     ],
   },

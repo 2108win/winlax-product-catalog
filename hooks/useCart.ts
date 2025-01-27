@@ -44,10 +44,10 @@ const useCart = create(
           });
           if (hasToast || onClick == null)
             return toast.success(
-              "Sản phẩm đã được cập nhật trong giỏ hàng.",
+              "Product updated in cart.",
               onClick && {
                 action: {
-                  label: "Xem giỏ hàng",
+                  label: "Go to cart",
                   onClick: onClick,
                 },
               },
@@ -63,10 +63,10 @@ const useCart = create(
         });
         if (hasToast || onClick == null)
           return toast.success(
-            "Sản phẩm đã được thêm vào giỏ hàng.",
+            "Add product success.",
             onClick && {
               action: {
-                label: "Xem giỏ hàng",
+                label: "Go to cart",
                 onClick: onClick,
               },
             },
@@ -94,9 +94,9 @@ const useCart = create(
         const tempItems = get().items;
         set({ items: [] });
         if (hasToast)
-          toast.success(`Tất cả sản phẩm đã được xóa khỏi giỏ hàng.`, {
+          toast.success(`All product deleted from cart.`, {
             action: {
-              label: "Hoàn tác",
+              label: "Undo",
               onClick: () => {
                 if (tempItems) {
                   set({ items: [...tempItems] });

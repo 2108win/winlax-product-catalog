@@ -1,6 +1,7 @@
 import Footer from "@/components/layouts/Footer";
 import Header, { OnTopHeader } from "@/components/layouts/Header";
 import { Toaster } from "@/components/ui/sonner";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Public_Sans } from "next/font/google";
 import "./globals.css";
@@ -21,21 +22,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      data-lt-installed="true"
-      className="light"
-    >
-      <body
-        className={`${publicSans.variable} flex min-h-svh flex-col antialiased`}
+    <ClerkProvider>
+      <html
+        lang="en"
+        suppressHydrationWarning
+        data-lt-installed="true"
+        className="light"
       >
-        <OnTopHeader />
-        <Header />
-        {children}
-        <Footer />
-        <Toaster />
-      </body>
-    </html>
+        <body
+          className={`${publicSans.variable} flex min-h-svh flex-col antialiased`}
+        >
+          <OnTopHeader />
+          <Header />
+          {children}
+          <Footer />
+          <Toaster />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

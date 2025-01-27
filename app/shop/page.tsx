@@ -1,6 +1,6 @@
 "use client";
-import ShopHero from "@/components/layouts/Shop/ShopHero";
-import ShopProducts from "@/components/layouts/Shop/ShopProducts";
+import ShopHero from "@/components/pages/Shop/ShopHero";
+import ShopProducts from "@/components/pages/Shop/ShopProducts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,17 +11,44 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ItemMore } from "@/lib/interfaces";
 import { cn } from "@/lib/utils";
+import { getListCategories } from "@/utils/fetchCategories";
+import { getListColors } from "@/utils/fetchColors";
 import { Search, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function ShopPage() {
   const [selectedCategories, setSelectedCategories] = useState<string>();
   const [selectedColors, setSelectedColors] = useState<string>();
+  const [listColors, setListColors] = useState<ItemMore[]>([]);
+  const [listCategories, setListCategories] = useState<ItemMore[]>([]);
   const onClickReset = () => {
     setSelectedColors("");
     setSelectedCategories("");
   };
+
+  useEffect(() => {
+    async function fetchSize() {
+      try {
+        const res = await getListColors();
+        setListColors(res);
+      } catch (error) {
+        console.error("Error fetching sizes:", error);
+      }
+    }
+    async function fetchCategories() {
+      try {
+        const res = await getListCategories();
+        setListCategories(res);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    }
+    fetchSize();
+    fetchCategories();
+  }, []);
+
   return (
     <>
       <ShopHero />
@@ -47,24 +74,15 @@ function ShopPage() {
                 value={selectedCategories}
                 onValueChange={(value) => setSelectedCategories(value)}
               >
-                <ToggleGroupItem
-                  value="A"
-                  className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                >
-                  Shoes
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="b"
-                  className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                >
-                  Jackets
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="c"
-                  className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                >
-                  Pants
-                </ToggleGroupItem>
+                {listCategories.map((category) => (
+                  <ToggleGroupItem
+                    key={category.id}
+                    value={category.id.toString()}
+                    className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  >
+                    {category.value}
+                  </ToggleGroupItem>
+                ))}
               </ToggleGroup>
             </div>
             <p className="hidden text-xl font-medium md:flex">Colors</p>
@@ -75,42 +93,21 @@ function ShopPage() {
               value={selectedColors}
               onValueChange={(value) => setSelectedColors(value)}
             >
-              <ToggleGroupItem
-                value="black"
-                className="h-8 w-fit cursor-pointer gap-0 rounded-full border-2 px-0 data-[state=on]:bg-transparent data-[state=on]:ring-2 data-[state=on]:ring-primary"
-                style={{ backgroundColor: "black" }}
-              >
-                <X
-                  className={cn(
-                    "ml-10 mr-1 hidden !h-5 !w-5 rounded-full bg-muted text-muted-foreground",
-                    selectedColors === "black" && "inline-block",
-                  )}
-                />
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="white"
-                className="h-8 w-fit cursor-pointer gap-0 rounded-full border-2 px-0 data-[state=on]:bg-transparent data-[state=on]:ring-2 data-[state=on]:ring-primary"
-                style={{ backgroundColor: "white" }}
-              >
-                <X
-                  className={cn(
-                    "ml-10 mr-1 hidden !h-5 !w-5 rounded-full bg-muted text-muted-foreground",
-                    selectedColors === "white" && "inline-block",
-                  )}
-                />
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="red"
-                className="h-8 w-fit cursor-pointer gap-0 rounded-full border-2 px-0 data-[state=on]:bg-transparent data-[state=on]:ring-2 data-[state=on]:ring-primary"
-                style={{ backgroundColor: "red" }}
-              >
-                <X
-                  className={cn(
-                    "ml-10 mr-1 hidden !h-5 !w-5 rounded-full bg-muted text-muted-foreground",
-                    selectedColors === "red" && "inline-block",
-                  )}
-                />
-              </ToggleGroupItem>
+              {listColors.map((color) => (
+                <ToggleGroupItem
+                  key={color.id}
+                  value={color.id.toString()}
+                  className="h-8 w-fit cursor-pointer gap-0 rounded-full border-2 px-0 data-[state=on]:bg-transparent data-[state=on]:ring-2 data-[state=on]:ring-primary"
+                  style={{ backgroundColor: color.value }}
+                >
+                  <X
+                    className={cn(
+                      "ml-10 mr-1 hidden !h-5 !w-5 rounded-full bg-muted text-muted-foreground",
+                      selectedColors === color.id.toString() && "inline-block",
+                    )}
+                  />
+                </ToggleGroupItem>
+              ))}
             </ToggleGroup>
           </div>
           <div className="my-5 flex flex-col gap-6 md:col-span-3">
@@ -140,8 +137,10 @@ function ShopPage() {
                 </SelectContent>
               </Select>
             </div>
-
-            <ShopProducts />
+            <ShopProducts
+              color={selectedColors}
+              category={selectedCategories}
+            />
           </div>
         </div>
       </div>
