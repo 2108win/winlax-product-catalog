@@ -23,9 +23,14 @@ function ShopPage() {
   const [selectedColors, setSelectedColors] = useState<string>();
   const [listColors, setListColors] = useState<ItemMore[]>([]);
   const [listCategories, setListCategories] = useState<ItemMore[]>([]);
+  const [search, setSearch] = useState("");
+  const [orderBy, setOrderBy] = useState("item_stock_quantity");
+
   const onClickReset = () => {
     setSelectedColors("");
     setSelectedCategories("");
+    setSearch("");
+    setOrderBy("item_stock_quantity");
   };
 
   useEffect(() => {
@@ -121,25 +126,29 @@ function ShopPage() {
                 <Input
                   placeholder="Search ..."
                   className="border-none pl-1 text-lg outline-none placeholder:text-base focus-visible:ring focus-visible:ring-transparent"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
-              <Select>
+              <Select value={orderBy} onValueChange={setOrderBy}>
                 <SelectTrigger className="w-fit min-w-fit space-x-2 text-lg font-medium">
                   <span className="text-sm font-normal text-secondary-foreground">
                     Sort by
                   </span>
-                  <SelectValue defaultValue="popular" />
+                  <SelectValue defaultValue="item_stock_quantity" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="popular">Popular</SelectItem>
-                  <SelectItem value="priceDown">Price Down</SelectItem>
-                  <SelectItem value="priceUp">Price Up</SelectItem>
+                  <SelectItem value="item_stock_quantity">Popular</SelectItem>
+                  <SelectItem value="-item_price">Price Down</SelectItem>
+                  <SelectItem value="item_price">Price Up</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <ShopProducts
               color={selectedColors}
               category={selectedCategories}
+              search={search}
+              order_by={orderBy}
             />
           </div>
         </div>

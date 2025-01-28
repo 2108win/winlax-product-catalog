@@ -11,7 +11,8 @@ import React, { useState } from "react";
 
 type Props = {
   product: Product;
-  size?: "sm" | "default" | "lg" | "icon";
+  size: string;
+  color: string;
   className?: string;
   isMain?: boolean;
 };
@@ -19,6 +20,7 @@ type Props = {
 export const ProductCardAction = ({
   product,
   size,
+  color,
   className,
   isMain,
 }: Props) => {
@@ -36,7 +38,7 @@ export const ProductCardAction = ({
   const onAddToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
-    cart.addItem(product, quantity, () => {
+    cart.addItem(product, quantity, size, color, () => {
       router.push("/cart");
       cart.checkedItem(product.id, true);
     });
@@ -44,7 +46,7 @@ export const ProductCardAction = ({
 
   const handleBuyNow = () => {
     if (isMain) {
-      cart.addItem(product, 1);
+      cart.addItem(product, 1, size, color);
       router.push(`/cart`);
     } else {
       router.push(`/shop/${product.id}`);
@@ -90,14 +92,14 @@ export const ProductCardAction = ({
       )}
       <div className="mt-4 flex flex-col gap-4 sm:flex-row">
         {isSignedIn ? (
-          <Button onClick={onAddToCart} size={size} className="w-full">
+          <Button onClick={onAddToCart} className="w-full" size={"lg"}>
             Add to cart
             <ShoppingCart className="ml-4" size={20} />
           </Button>
         ) : (
           <AuthModal
             trigger={
-              <Button size={size} className="w-full">
+              <Button className="w-full">
                 Add to cart
                 <ShoppingCart className="ml-4" size={20} />
               </Button>
@@ -109,8 +111,8 @@ export const ProductCardAction = ({
           <Button
             onClick={handleBuyNow}
             className="w-full bg-[linear-gradient(290deg,#e5e5e5,25%,#3d444e,55%,#e5e5e5)] bg-[length:200%_100%] transition-all hover:bg-[length:100%_150%] dark:bg-[linear-gradient(110deg,#000000,25%,#3d444e,55%,#000000)]"
-            size={size}
             variant={"outline"}
+            size={"lg"}
           >
             Mua ngay
           </Button>
@@ -119,8 +121,8 @@ export const ProductCardAction = ({
             trigger={
               <Button
                 className="w-full bg-[linear-gradient(290deg,#e5e5e5,25%,#3d444e,55%,#e5e5e5)] bg-[length:200%_100%] transition-all hover:bg-[length:100%_150%] dark:bg-[linear-gradient(110deg,#000000,25%,#3d444e,55%,#000000)]"
-                size={size}
                 variant={"outline"}
+                size={"lg"}
               >
                 Mua ngay
               </Button>

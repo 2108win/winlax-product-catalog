@@ -10,6 +10,19 @@ type ProductCardProps = {
   size: string;
 };
 
+export function ProductCardLoading() {
+  return (
+    <div className="flex h-full w-full flex-col gap-2">
+      <Skeleton className="aspect-square w-full rounded-md" />
+      <div className="flex w-full justify-between gap-4">
+        <Skeleton className="h-7 w-40" />
+        <Skeleton className="h-7 w-20" />
+      </div>
+      <Skeleton className="h-7 w-20" />
+    </div>
+  );
+}
+
 function ProductCard({ image, name, price, size }: ProductCardProps) {
   return (
     <Suspense

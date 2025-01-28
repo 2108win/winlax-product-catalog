@@ -3,15 +3,23 @@ export interface NavList {
   href: string;
 }
 
+export interface ResProduct {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Product[];
+}
+
 export interface Product {
-  // id	item_id	item_name	item_description	item_price	item_color	item_size	item_brand	item_material	item_category	item_stock_quantity	item_release_date	item_images
+  // id	item_name	item_description	item_price	item_color	item_size	item_brand	item_material	item_category	item_stock_quantity	item_release_date	item_images
   id: string;
-  item_id: string;
   item_name: string;
   item_description: string;
   item_price: number;
   item_color: ItemMore[];
   item_size: ItemMore[];
+  color: string;
+  size: string;
   item_brand: string;
   item_material: string;
   item_category: string;
@@ -51,16 +59,46 @@ export interface ImageProduct {
   uploaded_at: Date;
 }
 
-export interface User {
-  id: string;
-  fullName: string;
-  emailAddresses: string;
-  image: string;
-  phoneNumbers: string;
-  cart: Product[];
-}
 export interface ItemMore {
   id: number;
   value: string;
   order?: number;
 }
+
+export interface User {
+  user_id: number;
+  order: string;
+  username: string;
+  email: string;
+  active: boolean;
+  cart: ItemMore[];
+}
+
+export interface Order {
+  customer_name: string;
+  email: string;
+  phone_number: string;
+  address: string;
+  note: string;
+  payment_method: string;
+  products: number[];
+  sum: string;
+}
+
+// {
+//     "id": 0,
+//     "order": "1.00000000000000000000",
+//     "customer_name": "string",
+//     "email": "example@baserow.io",
+//     "phone_number": "string",
+//     "address": "string",
+//     "note": "string",
+//     "payment_method": "string",
+//     "products": [
+//         {
+//             "id": 0,
+//             "value": "string"
+//         }
+//     ],
+//     "sum": "0.00"
+// }

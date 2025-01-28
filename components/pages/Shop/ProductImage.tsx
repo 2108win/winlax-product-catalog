@@ -15,7 +15,7 @@ function ProductImage({ product, className }: Props) {
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       <div className="flex h-[300px] md:h-[450px]">
-        {product ? (
+        {product.item_images[currentImage] ? (
           <Image
             src={product.item_images[currentImage].url}
             alt={product.item_name + " - " + currentImage}

@@ -7,6 +7,8 @@ interface CartStore {
   addItem: (
     data: Product,
     quantity: number,
+    size: string,
+    color: string,
     onClick?: () => void,
     hasToast?: boolean,
   ) => void;
@@ -25,6 +27,8 @@ const useCart = create(
       addItem: (
         data: Product,
         quantity,
+        size,
+        color,
         onClick?: () => void,
         hasToast = true,
       ) => {
@@ -37,6 +41,8 @@ const useCart = create(
                 ? {
                     ...item,
                     quantity: item.quantity + quantity,
+                    size: size,
+                    color: color,
                     checked: true,
                   }
                 : item,

@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Currency from "@/components/ui/currency";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import useCart from "@/hooks/useCart";
 import { Product } from "@/lib/interfaces";
 import { cn } from "@/lib/utils";
@@ -14,13 +21,17 @@ import { useEffect, useState } from "react";
 
 interface CartItemProps {
   data: Product;
+  size: string;
+  color: string;
 }
 
-const CartItem: React.FC<CartItemProps> = ({ data }) => {
+const CartItem: React.FC<CartItemProps> = ({ data, size, color }) => {
   const cart = useCart();
   const [quantity, setQuantity] = useState(data.quantity || 1);
   const [totalPrice, setTotalPrice] = useState(0);
   const [isChecked, setIsChecked] = useState(true);
+  const [sizeItem, setSizeItem] = useState(size);
+  const [colorItem, setColorItem] = useState(color);
   const onChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (Number(e.target.value) < 1) return;
     setQuantity(Number(e.target.value));
@@ -64,7 +75,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
         </Button>
         <div className="relative w-[100px] overflow-hidden rounded-md sm:w-[150px] md:w-[250px]">
           <Image
-            src={data?.item_images[0].url || "/og-image.jpg"}
+            src={data.item_images[0]?.url || "/logo.svg"}
             alt={data.item_name}
             width={250}
             height={200}
@@ -90,7 +101,37 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
 
                 {/* {data.productName} */}
               </Link>
-              <Currency value={data.item_price} />
+              <div className="flex items-center gap-2 font-bold">
+                <Currency value={data.item_price} /> -
+                <Select value={sizeItem} onValueChange={setSizeItem}>
+                  <SelectTrigger className="h-fit w-fit min-w-fit space-x-2 px-2 py-1 text-sm font-bold">
+                    <SelectValue defaultValue={size} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {data.item_size.map((size) => (
+                      <SelectItem key={size.id} value={size.id.toString()}>
+                        {size.value}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                -
+                <Select value={colorItem} onValueChange={setColorItem}>
+                  <SelectTrigger className="h-fit w-fit min-w-fit space-x-2 p-2 text-sm font-medium">
+                    <SelectValue defaultValue={color} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {data.item_color.map((color) => (
+                      <SelectItem key={color.id} value={color.id.toString()}>
+                        <div
+                          className="h-4 w-8 rounded-full"
+                          style={{ backgroundColor: color.value }}
+                        />
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center rounded-lg border border-gray-200 p-[1px]">
@@ -129,10 +170,12 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
                   <Plus size={20} />
                 </Button>
               </div>
-              <Currency
-                value={totalPrice}
-                className="hidden text-xl font-bold sm:block"
-              />
+              <div className="flex items-center gap-1">
+                <Currency
+                  value={totalPrice}
+                  className="hidden text-xl font-bold sm:block"
+                />
+              </div>
             </div>
           </div>
         </div>

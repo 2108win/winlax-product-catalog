@@ -22,7 +22,7 @@ const useSessionUser = create<SessionStore>()(
 
       login: (data: User) => {
         set({ isLogin: true, user: data });
-        toast.success(`Hi <b>${data.fullName}</b>!`, {
+        toast.success(`Hi <b>${data.username}</b>!`, {
           description: "Login successfully! ",
         });
       },

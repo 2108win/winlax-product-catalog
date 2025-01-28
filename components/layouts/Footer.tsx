@@ -1,4 +1,8 @@
+"use client";
+import axios from "axios";
 import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
@@ -37,6 +41,36 @@ const FooterLinks = [
 ];
 
 function Footer() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const sendEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setLoading(true);
+
+    try {
+      const response = await axios.post(
+        "https://api.baserow.io/api/database/rows/table/435248/?user_field_names=true",
+        { email },
+        {
+          headers: {
+            Authorization: `Token ${process.env.NEXT_PUBLIC_BASEROW_TOKEN}`,
+          },
+        },
+      );
+      if (response.status === 200) {
+        setEmail("");
+        toast.success("Thank you for subscribing!");
+      } else {
+        toast.error("Failed to subscribe. Please try again later.");
+      }
+    } catch {
+      toast.error("Failed to subscribe. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="w-full bg-secondary">
       <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-4 px-4 py-8 text-secondary-foreground md:grid-cols-2 md:gap-8 lg:grid-cols-5">
@@ -46,13 +80,22 @@ function Footer() {
             Be the first to know about our special offers, new product launches,
             and events
           </p>
-          <div className="flex w-fit items-center rounded-md border-2 outline-none ring-0">
+          <form
+            onSubmit={sendEmail}
+            className="flex w-fit items-center rounded-md border-2 outline-none ring-0"
+          >
             <Input
+              type="email"
+              name="email"
               placeholder="Enter your email"
               className="max-w-52 border-none text-lg outline-none focus-visible:ring focus-visible:ring-transparent"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            <Button variant="ghost">Subscribe</Button>
-          </div>
+            <Button type="submit" variant="ghost" disabled={loading}>
+              Subscribe
+            </Button>
+          </form>
         </div>
         {FooterLinks.map((group) => (
           <div key={group.title} className="flex flex-col gap-2">

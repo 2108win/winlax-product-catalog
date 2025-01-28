@@ -19,12 +19,11 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import useCart from "@/hooks/useCart";
-import { Product } from "@/lib/interfaces";
+import { Order, Product } from "@/lib/interfaces";
+import { createOrder } from "@/utils/fetchOrder";
 import { useState } from "react";
 import { toast } from "sonner";
 import Currency from "../ui/currency";
-
-const apiInvoiceUrl = process.env.NEXT_PUBLIC_SERVER_URL + "/Invoice";
 
 interface InvoiceModalProps {
   isOpen: boolean;
@@ -51,34 +50,34 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
 }) => {
   const [isChecked, setIsChecked] = useState(false);
   const cart = useCart();
-
+  // {
+  //     "customer_name": "string",
+  //     "email": "example@baserow.io",
+  //     "phone_number": "string",
+  //     "address": "string",
+  //     "note": "string",
+  //     "payment_method": "string",
+  //     "products": [
+  //         {
+  //             "id": 0,
+  //             "value": "string"
+  //         }
+  //     ],
+  //     "sum": "0.00"
+  // }
   const onConfirm = async () => {
-    const body = {
-      ProductIds: products.map(() => {
-        return {
-          //   Id: item.id,
-          //   ProductName: item.productName,
-          //   Brand: item.brand,
-          //   Model: item.model,
-          //   Count: item.quantity,
-          //   Price: item.price.toString(),
-        };
-      }),
-      LocaltionUser: information.address,
-      PhoneNumber: information.phone,
-      // email: information.email,
-      UserName: information.name,
-      Note: information.note || "(non)",
-      TotalPrice: total.toString(),
+    const body: Order = {
+      customer_name: information.name,
+      email: information.email as string,
+      phone_number: information.phone as string,
+      address: information.address,
+      note: information.note,
+      payment_method: payment,
+      products: products.map((product) => Number(product.id)),
+      sum: total.toString(),
     };
-    const res = await fetch(`${apiInvoiceUrl}/addInvoice`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-    if (res.ok) {
+    const res = await createOrder(body);
+    if (res.status === 200) {
       isOpen = false;
       const hasToast = false;
       for (const item of products) {
@@ -87,11 +86,12 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
       toast.success("Order completely.", {
         description: "Have good day!!!",
       });
+      setIsChecked(false);
     } else {
-      const response = await res.json();
       toast.error(`Status: ${res.status}`, {
-        description: response.title,
+        description: res.statusText,
       });
+      setIsChecked(false);
     }
     onClose();
   };

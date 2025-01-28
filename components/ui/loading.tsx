@@ -1,11 +1,10 @@
 import { cn } from "@/lib/utils";
+import { LoaderPinwheel } from "lucide-react";
 
 function Loading({ className }: { className?: string }) {
   return (
     <div className="flex items-center justify-center">
-      <span
-        className={cn("loading loading-spinner loading-xs", className)}
-      ></span>
+      <LoaderPinwheel className={cn("animate-spin", className)} />
     </div>
   );
 }

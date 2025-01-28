@@ -152,7 +152,12 @@ const CartPage = () => {
                 </div>
                 <ul className="space-y-6">
                   {cart.items.map((item) => (
-                    <CartItem key={item.id} data={item} />
+                    <CartItem
+                      key={item.id}
+                      data={item}
+                      size={item.size}
+                      color={item.color}
+                    />
                   ))}
                 </ul>
               </div>
